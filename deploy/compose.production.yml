@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: b2b
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD}
+      POSTGRES_DB: b2b
+    volumes: ["db_data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U b2b -d b2b"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  migrate:
+    build:
+      context: ..
+      target: build
+    env_file: ../.env
+    command: ["pnpm", "exec", "prisma", "migrate", "deploy"]
+    depends_on:
+      db:
+        condition: service_healthy
+  web:
+    build: ..
+    restart: unless-stopped
+    env_file: ../.env
+    volumes: ["private_files:/app/storage/private", "public_images:/app/public/uploads"]
+    expose: ["3000"]
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      SITE_HOST: ${SITE_HOST:?set SITE_HOST}
+    volumes: ["./Caddyfile:/etc/caddy/Caddyfile:ro", "caddy_data:/data", "caddy_config:/config"]
+    depends_on: ["web"]
+volumes:
+  db_data:
+  private_files:
+  public_images:
+  caddy_data:
+  caddy_config:

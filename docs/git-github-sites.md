@@ -2,7 +2,7 @@
 
 ## 1. Git
 
-- main 브랜치에 소스와 기존 검증 기록을 저장합니다.
+- b2bsite 브랜치에 소스와 검증 기록을 저장합니다. GitHub의 기존 main은 변경하지 않습니다.
 - .env와 환경별 설정, 비공개 파일, 상품 업로드, 로컬 PostgreSQL, 의존성/빌드/테스트 결과/패키지 캐시는 제외합니다.
 - .env.example에는 변수 이름과 개발용 기본값만 보관합니다.
 - 실제 코드의 첫 커밋은 로컬 재현 가능한 Node/PostgreSQL 앱입니다.
@@ -13,7 +13,7 @@
 
 GitHub로 push할 때 필요한 인증은 Git Credential Manager의 공식 로그인 흐름을 이용합니다. 비밀번호·개인 토큰을 채팅이나 소스에 입력하지 않습니다.
 
-.github/workflows/ci.yml은 PostgreSQL 17 서비스에서 migration/seed, strict typecheck, lint, 단위·통합 검사, standalone build, Chromium E2E를 실행하도록 준비했습니다. GitHub에 아직 업로드하지 않았으므로 원격 CI 결과는 미확인입니다. 기존 docs/test-results.md는 2026-10-07 로컬 검증 기록이며 이번 날짜의 성공으로 갱신하지 않습니다.
+.github/workflows/ci.yml은 PostgreSQL 17 서비스에서 migration/seed, strict typecheck, lint, 단위·통합 검사, standalone build, Chromium E2E를 실행하도록 준비했습니다. 2026-10-14 GitHub의 b2bsite 브랜치 업로드와 CI 전체 통과를 확인했습니다. 검증 커밋은 168b3d0cf27245991e8af06b2d3d1ad246f2b01a, 실행 링크는 https://github.com/hasourcingco/hasourcing/actions/runs/38521298112 입니다. 최초 Linux 설치 오류를 해당 패키지의 빌드 허용 설정으로 수정한 뒤 통과했습니다. 기존 docs/test-results.md는 2026-10-07 로컬 검증 기록이며 원격 결과는 docs/github-ci-2026-10-14.md에 별도로 기록합니다.
 
 ## 3. Sites 실행 환경 검토
 
@@ -41,7 +41,7 @@ Sites 스킬의 실행 계약: Cloudflare Workers, isolate 128 MB, HTTP 기반 �
 
 ## 마지막에 필요한 설정
 
-- GitHub Git 쓰기 인증이 요청되면 공식 로그인 창에서 완료.
+- GitHub 업로드와 쓰기 인증은 완료했습니다. 다음 작업은 b2bsite 브랜치를 기준으로 진행합니다.
 - Sites 운영용 데이터베이스/HTTP 연결 및 인증 경로 선택.
 - 운영 관리자, 인증 secret, 실상품·사업자정보·정책, 실제 PG·이메일 연동.
 

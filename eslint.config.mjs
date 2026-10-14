@@ -6,6 +6,7 @@ export default defineConfig([
   ...ts,
   globalIgnores([
     ".next/**",
+    ".artifacts/**",
     "node_modules/**",
     "next-env.d.ts",
     "scripts/local-db.cjs",
